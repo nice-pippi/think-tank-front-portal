@@ -79,6 +79,9 @@ function getBlockInfoAndIsMasterById() {
         blockInfo.value = response.data
     })
 
+    if (!localStorage.getItem("token")) {
+        return
+    }
     isMaster(id).then(response => {
         showEditButton.value = response.data
     })

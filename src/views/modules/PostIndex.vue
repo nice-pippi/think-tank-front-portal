@@ -2,7 +2,7 @@
     <div class="body_div">
         <!-- InfoSearch 和 BlockIndexInfo 组件 -->
         <InfoSearch></InfoSearch>
-        <BlockIndexInfo :blockInfo="blockInfo"></BlockIndexInfo>
+        <BlockIndexInfo :blockInfo="blockInfo" :showEditButton="showEditButton"></BlockIndexInfo>
 
         <!-- 帖子标题以及帖子管理按钮 -->
         <div class="post_head">
@@ -176,7 +176,7 @@
 import { ref, reactive, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
-import { getBlockInfo } from "@/api/block";
+import { getBlockInfo, isMaster } from "@/api/block";
 import { processUrl } from "@/utils/ImageUtil";
 import { addFavorite, removeFavorite, getTitleAndTagById, isFavorite, deleteById, hasDeletePermission } from "@/api/post";
 import { ElMessage, ElMessageBox } from 'element-plus'
@@ -320,6 +320,9 @@ const showDeleteButton = ref(false)
 
 // 获取当前登录用户是否拥有删除帖子权限
 function hasDeletePermissionById() {
+    if (!localStorage.getItem("token")) {
+        return
+    }
     const postId = String(route.params.postId)
     hasDeletePermission(postId).then(response => {
         showDeleteButton.value = response.data
@@ -579,11 +582,21 @@ function removeLike(commentId: string) {
 // 板块信息
 const blockInfo = ref({})
 
+// 是否显示编辑按钮
+const showEditButton = ref(false)
+
 // 获取板块信息
 function getBlockInfoById() {
     const id = String(route.params.blockId)
     getBlockInfo(id).then(response => {
         blockInfo.value = response.data
+    })
+
+    if (!localStorage.getItem("token")) {
+        return
+    }
+    isMaster(id).then(response => {
+        showEditButton.value = response.data
     })
 }
 
