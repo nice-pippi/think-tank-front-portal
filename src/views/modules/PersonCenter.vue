@@ -16,7 +16,8 @@
                     <div class="description_item">
                         <h1 style="font-size: 24px;">{{ info.username }}</h1>
                         <a href="/MyInfoDetail">
-                            <el-button type="primary" plain icon="Edit" class="editor_button" v-if="isMe">编辑资料</el-button>
+                            <el-button type="primary" plain icon="Edit" class="editor_button"
+                                v-if="isMe">编辑资料</el-button>
                         </a>
                     </div>
                     <!-- 用户性别、注册时间、发帖数信息 -->
@@ -43,14 +44,13 @@
                 </div>
                 <el-empty description="暂无" :image-size="80" v-if="blockList.length == 0" />
                 <div class="follow_block">
-                    <span v-for="item in blockList">
-                        <el-tooltip :content="item.blockName" placement="top">
-                            <el-link :underline="false" :href="`/BlockIndex/${item.id}`" target="_blank">
-                                <el-button class="block_button" plain>
-                                    <el-text truncated>{{ item.blockName }}</el-text>
-                                </el-button>
+                    <span v-for="(item, index) in blockList">
+                        <el-tag type="success" :key="item.id" closable class="block_button" size="large"
+                            @close="unFollowBlock(index, item.id)">
+                            <el-link :underline="false" :href="`/BlockIndex/${item.id}`" target="_blank" type="success">
+                                {{ item.blockName }}
                             </el-link>
-                        </el-tooltip>
+                        </el-tag>
                     </span>
                 </div>
                 <el-divider />
@@ -88,7 +88,7 @@
                 <div class="pagination_css" style="margin: 15px 0 0 0;">
                     <el-pagination v-model:current-page="favoritePage.currentPage" layout="prev, pager, next" small
                         background :pager-count="5" :page-size="10" :total="favoritePage.total"
-                        @current-change="fahandleCurrentChangeByFavorite" />
+                        @current-change="handleCurrentChangeByFavorite" />
                 </div>
             </el-card>
         </div>
@@ -102,11 +102,11 @@ import { Message } from '@element-plus/icons-vue'
 import { useRoute } from 'vue-router'
 import { formatter } from "@/utils/dateFormat";
 import { processUrl } from "@/utils/ImageUtil";
-import { getAllFollow } from "@/api/block";
+import { getAllFollow, unFollow } from "@/api/block";
 import { getLoginId } from "@/utils/JwtUtil";
 import { getFavoritePage, getPageByPublishedPosts } from "@/api/post";
 import { getUserInfo } from "@/api/user";
-import { ElMessage } from 'element-plus'
+import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '@/router';
 import { addChatRoom } from '@/api/message';
 
@@ -222,6 +222,31 @@ async function getAllFollowByCurrentId() {
 
 }
 
+// 取关板块
+function unFollowBlock(index: number, blockId: string) {
+    ElMessageBox.confirm('您确定要取消关注此板块?', '警告', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+        .then(() => {
+            unFollow(blockId).then(response => {
+                blockList.value.splice(index, 1)
+                ElMessage.success(response.data)
+                // 从 localStorage 获取数据
+                let data = JSON.parse(localStorage.getItem('followBlock') as string) || [];
+                // 删除指定 id 的数据
+                data = data.filter((item: { id: string; }) => item.id !== blockId);
+                // 将更新后的数据存回 localStorage
+                localStorage.setItem('followBlock', JSON.stringify(data));
+            }).catch(error => {
+                ElMessage.error(error)
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消操作',
+            })
+        })
+}
+
 // 分页查询当前用户收藏的帖子
 function getFavoritePageByCurrentId() {
     const userId = String(route.params.id)
@@ -239,7 +264,7 @@ const handleCurrentChangeByPost = (val: number) => {
 }
 
 // 处理当前页变化（我关注的）
-const fahandleCurrentChangeByFavorite = (val: number) => {
+const handleCurrentChangeByFavorite = (val: number) => {
     console.log(`current page: ${val}`)
 }
 
@@ -356,7 +381,6 @@ onUnmounted(() => {
                 flex-wrap: wrap;
 
                 .block_button {
-                    width: 120px;
                     margin: 20px 10px 0 10px;
                 }
             }
