@@ -84,6 +84,9 @@
                     <el-link @click="toPostIndex(item.blockId, item.id)" style="font-size: small;" type="info">
                         查看
                     </el-link>
+                    <el-link @click="removeFavoriteByPostId(item.id)" style="font-size: small;" type="info">
+                        删除
+                    </el-link>
                 </div>
                 <div class="pagination_css" style="margin: 15px 0 0 0;">
                     <el-pagination v-model:current-page="favoritePage.currentPage" layout="prev, pager, next" small
@@ -104,7 +107,7 @@ import { formatter } from "@/utils/dateFormat";
 import { processUrl } from "@/utils/ImageUtil";
 import { getAllFollow, unFollow } from "@/api/block";
 import { getLoginId } from "@/utils/JwtUtil";
-import { getFavoritePage, getPageByPublishedPosts } from "@/api/post";
+import { getFavoritePage, getPageByPublishedPosts, removeFavorite } from "@/api/post";
 import { getUserInfo } from "@/api/user";
 import { ElMessage, ElMessageBox } from 'element-plus'
 import router from '@/router';
@@ -273,6 +276,28 @@ function toPostIndex(blockId: string, postId: string) {
     window.open("/PostIndex/" + blockId + '/' + postId, "_blank")
 }
 
+// 删除收藏帖子
+function removeFavoriteByPostId(postId: string) {
+    ElMessageBox.confirm(
+        '确定要取消收藏该帖子？', '提示', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+        .then(() => {
+            removeFavorite(postId).then(response => {
+                ElMessage.success(response.data)
+                // 删除指定 id 的帖子
+                const data = favoritePage.data.filter((item: { id: string; }) => item.id !== postId);
+                favoritePage.data = data
+            }).catch(error => {
+                ElMessage.error(error)
+            })
+        })
+        .catch(() => {
+            ElMessage({
+                type: 'info',
+                message: '取消操作',
+            })
+        })
+}
+
 // 进入聊天室
 function chat() {
     const data = {
@@ -369,7 +394,7 @@ onUnmounted(() => {
         justify-content: space-between;
 
         .my_post {
-            width: 73%;
+            width: 70%;
 
             .head_css {
                 display: flex;
@@ -388,7 +413,7 @@ onUnmounted(() => {
         }
 
         .like {
-            width: 25%;
+            width: 28%;
             height: 100%;
             position: sticky;
             top: 0;
