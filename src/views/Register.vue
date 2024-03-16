@@ -1,6 +1,6 @@
 <template>
     <div class="bg">
-        <a href="/"><img src="../assets/logo.png" class="logo"></a>
+        <a href="/"><img src="@/assets/logo.png" class="logo"></a>
 
         <div class="slogan">
             <div class="big animate__animated animate__fadeInLeft">汇聚智慧</div>
@@ -101,7 +101,7 @@ const state = reactive({
 
 <style scoped>
 .bg {
-    background: url('../assets/register_background.png') no-repeat;
+    background: url('@/assets/register_background.png') no-repeat;
     background-size: cover;
     width: 100%;
     height: 100vh;
@@ -111,12 +111,12 @@ const state = reactive({
     .logo {
         width: 130px;
         position: absolute;
-        top: 70px;
-        left: 70px;
+        top: 40px;
+        left: 40px;
     }
 
     .slogan {
-        margin: 0 25% 0 20%;
+        margin: 0 28% 0 20%;
         text-shadow: 5px 5px 10px rgba(0, 0, 0, 0.5);
 
         .big {
