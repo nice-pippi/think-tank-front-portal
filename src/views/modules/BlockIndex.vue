@@ -15,7 +15,7 @@
                 <div class="pagination_css">
                     <el-pagination v-model:current-page="page.currentPage" :background="false" :page-size="page.size"
                         layout="total, prev, pager, next, jumper" :total="pageData.total"
-                        @current-change="handleCurrentChange" hide-on-single-page />
+                        @current-change="handleCurrentChange" />
                 </div>
             </el-card>
             <!-- 个人信息卡片 -->
@@ -28,7 +28,9 @@
                 <BlockMasterInfo :blockId="$route.params.id" :masterList="masterInfo.masterList"
                     :smallMasterList="masterInfo.smallMasterList"></BlockMasterInfo>
             </el-card>
+
         </div>
+
     </div>
 </template>
 
@@ -142,6 +144,8 @@ onMounted(() => {
 
         .post_crad {
             width: 73%;
+            height: 100%;
+            margin-bottom: 25px;
 
             .search {
                 width: 93%;
@@ -149,7 +153,6 @@ onMounted(() => {
             }
 
             .pagination_css {
-                margin: 20px 0;
                 display: flex;
                 justify-content: center;
             }

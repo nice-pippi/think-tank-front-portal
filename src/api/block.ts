@@ -94,7 +94,7 @@ export function getHotBlock() {
 // 验证当前登录是否指定板块的板主
 export function isMaster(id: string) {
     return request({
-        url: '/block/isMaster/' + id,
+        url: '/block/master/isMaster/' + id,
         method: 'get'
     })
 }

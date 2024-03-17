@@ -242,12 +242,7 @@ function unFollowBlock(index: number, blockId: string) {
                 ElMessage.error(error)
             })
         })
-        .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: '取消操作',
-            })
-        })
+        .catch(() => { })
 }
 
 // 分页查询当前用户收藏的帖子
@@ -290,12 +285,7 @@ function removeFavoriteByPostId(postId: string) {
                 ElMessage.error(error)
             })
         })
-        .catch(() => {
-            ElMessage({
-                type: 'info',
-                message: '取消操作',
-            })
-        })
+        .catch(() => { })
 }
 
 // 进入聊天室

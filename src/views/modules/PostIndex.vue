@@ -85,7 +85,8 @@
                 <el-card>
                     <div class="comment_head">
                         <h4 style="margin:0">发帖回复</h4>
-                        <el-button type="danger" icon="WarningFilled" size="small" @click="reportType(1, '')">举报</el-button>
+                        <el-button type="danger" icon="WarningFilled" size="small"
+                            @click="reportType(1, '')">举报</el-button>
                     </div>
                     <!-- 编辑器组件 -->
                     <EditorComponent></EditorComponent>
@@ -331,15 +332,7 @@ function hasDeletePermissionById() {
 
 // 删除帖子
 function deletePost() {
-    ElMessageBox.confirm(
-        '确定要删除帖子？',
-        '警告',
-        {
-            confirmButtonText: '确定',
-            cancelButtonText: '取消',
-            type: 'warning',
-        }
-    )
+    ElMessageBox.confirm('确定要删除帖子？', '警告', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning', })
         .then(() => {
             const blockId = String(route.params.blockId)
             const postId = String(route.params.postId)
@@ -351,9 +344,8 @@ function deletePost() {
             setTimeout(() => {
                 router.push('/BlockIndex/' + blockId)
             }, 700);
-        })
+        }).catch(() => { })
 }
-
 
 // 获取当前页所有评论
 function getComments() {

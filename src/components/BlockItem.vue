@@ -8,12 +8,13 @@
             <div class="block_info_footer">
                 <el-text size="small">简介：{{ item.description }}</el-text>
                 <el-link :href="`/BlockIndex/${item.id}`" type="primary" target="_blank" style="font-size: 12px;">
-                    进入</el-link>
+                    进入
+                </el-link>
             </div>
         </div>
     </div>
 </template>
-  
+
 <script lang="ts" setup>
 import { processUrl } from '@/utils/ImageUtil'
 
@@ -23,7 +24,7 @@ defineProps<{
 }>();
 
 </script>
-  
+
 <style scoped>
 .block_item {
     display: flex;

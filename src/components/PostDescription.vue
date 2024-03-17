@@ -7,8 +7,13 @@
                 v-show="!$route.path.startsWith('/BlockIndex')">{{ item.blockName }}</el-link>
             <br>
             <!-- 帖子标题 -->
-            <el-link @click="toPostIndex(item.blockId, item.id)" class="post_title"><span
-                    v-html="item.title"></span></el-link>
+            <div class="post_head">
+                <el-link @click="toPostIndex(item.blockId, item.id)">
+                    <span v-html="item.title" style="font-size: 18px;"></span>
+                </el-link>
+                <el-button type="danger" size="small" v-if="showDeleteButton"
+                    @click="deletePost(item.id)">删除</el-button>
+            </div>
             <br>
             <!-- 帖子描述 -->
             <el-text truncated>{{ item.content }}</el-text>
@@ -23,7 +28,7 @@
             <div class="description">
                 <User class="small_logo" />
                 <el-link class="description_item" type="info" :href="`/PersonCenter/${item.userId}`">{{ item.username
-                }}</el-link>
+                    }}</el-link>
                 <Clock class="small_logo" />
                 <span class="description_item">{{ item.createTime }}</span>
             </div>
@@ -34,9 +39,11 @@
 </template>
 
 <script lang="ts" setup>
-import { addPostClickRecord } from '@/api/post';
-import { ElMessage } from 'element-plus'
+import { onMounted, ref } from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus'
 import { useRoute } from 'vue-router';
+import { addPostClickRecord, deleteById } from '@/api/post';
+import { isMaster } from '@/api/block';
 
 const route = useRoute()
 
@@ -44,6 +51,39 @@ defineProps<{
     postData: any
 }>();
 
+// 是否显示删除button
+const showDeleteButton = ref(false)
+
+// 获取当前登录用户是否拥有删除帖子权限
+function hasDeletePermission() {
+    if (!route.path.startsWith("/BlockIndex")) {
+        return;
+    }
+    const blockId = String(route.params.id)
+    if (!localStorage.getItem("token")) {
+        return;
+    }
+    isMaster(blockId).then(response => {
+        showDeleteButton.value = response.data
+    })
+}
+
+// 删除帖子
+function deletePost(postId: string) {
+    ElMessageBox.confirm('确定要删除帖子？', '警告', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning', })
+        .then(() => {
+            deleteById(postId).then(response => {
+                ElMessage.success(response.data)
+            }).catch(error => {
+                ElMessage.error(error)
+            })
+            setTimeout(() => {
+                location.reload()
+            }, 700);
+        }).catch(() => { })
+}
+
+// 跳转到帖子页面
 function toPostIndex(blockId: string, postId: string) {
     // 如果用户已登录，则发起请求新增点击记录到帖子记录表
     if (localStorage.getItem("token")) {
@@ -53,9 +93,12 @@ function toPostIndex(blockId: string, postId: string) {
             ElMessage.error('出现了错误...')
         })
     }
-
     window.open("/PostIndex/" + blockId + '/' + postId, "_blank")
 }
+
+onMounted(() => {
+    hasDeletePermission()
+})
 </script>
 
 
@@ -66,9 +109,11 @@ function toPostIndex(blockId: string, postId: string) {
         margin-bottom: 10px;
     }
 
-    .post_title {
-        font-size: 18px;
-        margin: 0 0 20px 0;
+    .post_head {
+        display: flex;
+        justify-content: space-between;
+        height: auto;
+        align-items: center;
     }
 
     .img_div {
