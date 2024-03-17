@@ -13,7 +13,9 @@
                     <el-popover placement="right" :title="item.bigTypeName" trigger="hover" width="600">
                         <div slot="content">
                             <span v-for="sub in item.subCategories">
-                                <el-link @click="openBlockDialog(item.id, sub.id)">{{ sub.smallTypeName }}</el-link>
+                                <el-link @click="openBlockDialog(item.id, sub.id, sub.smallTypeName)">
+                                    {{ sub.smallTypeName }}
+                                </el-link>
                                 <el-divider direction="vertical" />
                             </span>
                         </div>
@@ -30,21 +32,22 @@
                 <div class="classify_item" v-for="item in  category ">
                     <el-text size="large" class="title">{{ item.bigTypeName }}</el-text>
                     <span v-for="sub in  item.subCategories ">
-                        <el-link @click="openBlockDialog(item.id, sub.id)">{{ sub.smallTypeName }}</el-link>
+                        <el-link @click="openBlockDialog(item.id, sub.id, sub.smallTypeName)">
+                            {{ sub.smallTypeName }}
+                        </el-link>
                         <el-divider direction="vertical" />
                     </span>
                 </div>
             </div>
         </div>
-        <el-dialog v-model="blockDialog.status" title="选择板块" width="32%">
+        <el-dialog v-model="blockDialog.status" :title="blockDialog.currentBlockName" width="32%">
             <div style="display: flex;justify-content: space-between;">
-                <el-select v-model="blockDialog.currentBlockId" filterable placeholder="Select" size="large">
+                <el-select v-model="blockDialog.currentBlockId" filterable placeholder="选择板块" size="large">
                     <el-option v-for="item in blockDialog.blockList" :key="item.id" :label="item.blockName"
                         :value="item.id" />
                 </el-select>
                 <el-button type="primary" size="large" @click="toBlockIndex">进入</el-button>
-                <el-button type="success" size="large" @click="applicationBlockDialog.status = true"
-                    v-if="blockDialog.blockList.length == 0">申请创建板块</el-button>
+                <el-button type="success" size="large" @click="applicationBlockDialog.status = true">申请创建板块</el-button>
             </div>
         </el-dialog>
         <el-dialog v-model="applicationBlockDialog.status" title="申请创建板块" width="35%">
@@ -95,13 +98,15 @@ async function getAllBlockClassify() {
 const blockDialog = reactive({
     status: false,
     blockList: [] as any,
-    currentBlockId: ''
+    currentBlockId: '',
+    currentBlockName: ''
 })
 
 // 打开板块dialog
-function openBlockDialog(bigTypeId: string, smallTypeId: string) {
+function openBlockDialog(bigTypeId: string, smallTypeId: string, blockName: string) {
     blockDialog.status = true
     blockDialog.currentBlockId = ''
+    blockDialog.currentBlockName = '所属板块小分类：' + blockName
     applicationBlockDialog.form.bigTypeId = bigTypeId
     applicationBlockDialog.form.smallTypeId = smallTypeId
     getAllBlockBySmallTypeId(smallTypeId).then(response => {
