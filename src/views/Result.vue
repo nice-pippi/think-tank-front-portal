@@ -41,6 +41,9 @@ async function getUser() {
         }
     }
 
+    // 在用户登录后，清除现有的板块大小分类缓存，以确保所展示的板块大小分类信息为最新数据。
+    localStorage.removeItem("blockClassify")
+
     // 2s后跳转页面
     setTimeout(() => {
         router.push('/'); // 重定向到根路径  
