@@ -81,6 +81,7 @@
                         layout="total, prev, pager, next, jumper" :total="pageData.total"
                         @current-change="handleCurrentChange" />
                 </div>
+
                 <!-- 回复 -->
                 <el-card>
                     <div class="comment_head">
@@ -174,7 +175,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, reactive, onMounted, computed } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import type { FormInstance, FormRules } from 'element-plus'
 import { getBlockInfo, isMaster } from "@/api/block";

@@ -12,11 +12,13 @@
                 <el-input v-model="page.title" placeholder="板块内搜索" class="search" clearable />
                 <el-button :icon="Search" circle @click="searchPost" />
                 <PostDescription :postData="pageData.data"></PostDescription>
-                <div class="pagination_css">
+                <div class="pagination_css" v-if="pageData.total != 0">
                     <el-pagination v-model:current-page="page.currentPage" :background="false" :page-size="page.size"
                         layout="total, prev, pager, next, jumper" :total="pageData.total"
                         @current-change="handleCurrentChange" />
                 </div>
+                <!-- 提示用户该板块暂无帖子 -->
+                <el-empty description="暂无帖子" :image-size="80" v-if="pageData.total == 0" />
             </el-card>
             <!-- 个人信息卡片 -->
             <el-card class="info_card">
