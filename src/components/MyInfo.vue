@@ -8,7 +8,6 @@
 
 <script lang="ts" setup>
 import { reactive, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
 import { processUrl } from "@/utils/ImageUtil";
 
 // 用户信息数据

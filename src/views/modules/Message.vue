@@ -12,8 +12,9 @@
                         <div>
                             <el-scrollbar height="450px">
                                 <!-- 每个私信项 -->
-                                <div class="private_letter_item" v-for="(item, index) in privateLetterList" :key="item.id"
-                                    :class="{ active: index === selectedMessageIndex }" @click="selectMessage(index)">
+                                <div class="private_letter_item" v-for="(item, index) in privateLetterList"
+                                    :key="item.id" :class="{ active: index === selectedMessageIndex }"
+                                    @click="selectMessage(index)">
                                     <!-- 发送者头像 -->
                                     <el-avatar :size="40" :src="processUrl(item.avatar)" style="margin-left: 10px;" />
                                     <!-- 发送者名称和时间 -->
@@ -25,8 +26,9 @@
                                             <span class="time_css">{{ item.updateTime }}</span>
                                         </div>
                                         <!-- 私信内容 -->
-                                        <el-text truncated style="width: 120px; font-size: x-small;">{{ item.latestContent
-                                        }}</el-text>
+                                        <el-text truncated style="width: 120px; font-size: x-small;">{{
+                                    item.latestContent
+                                }}</el-text>
                                     </div>
                                 </div>
                             </el-scrollbar>
@@ -54,8 +56,8 @@
                                     <div v-for="(item, index) in messageList" class="avatar_bubble_flex"
                                         :class="{ bubble_right: isMe(String(item.sendUserId)) }">
                                         <!-- 聊天气泡 -->
-                                        <el-avatar :size="40" :src="currentChat.avatarBySendUser" style="margin-left: 10px;"
-                                            v-show="!isMe(String(item.sendUserId))" />
+                                        <el-avatar :size="40" :src="currentChat.avatarBySendUser"
+                                            style="margin-left: 10px;" v-show="!isMe(String(item.sendUserId))" />
                                         <ChatBubble :message="item.content" :isMe="!isMe(String(item.sendUserId))">
                                         </ChatBubble>
                                         <div>
@@ -114,9 +116,9 @@
     </div>
 </template>
 
-  
+
 <script lang="ts" setup>
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive, onMounted } from 'vue'
 import { View } from '@element-plus/icons-vue'
 import { getReceivedCommentsPage } from "@/api/comment";
 import { getAllChatRoom, getPrivateMessage } from "@/api/message";
@@ -351,6 +353,8 @@ onMounted(() => {
                 }
 
                 .online_chat {
+
+
                     .avatar_bubble_flex {
                         display: flex;
                         justify-content: flex-start;
@@ -415,4 +419,3 @@ onMounted(() => {
     }
 }
 </style>
-  

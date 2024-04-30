@@ -25,4 +25,12 @@ export function getPrivateMessage(chatRoomId: string) {
     })
 }
 
-// 新建聊天室
+// 发送消息给Ai小助手
+export function sendMessageToAi(data: any) {
+    return request({
+        url: '/message/ai/',
+        method: 'post',
+        data,
+        timeout: 0
+    })
+}
