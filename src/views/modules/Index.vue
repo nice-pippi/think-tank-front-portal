@@ -46,7 +46,8 @@
             </el-card>
 
         </div>
-        <img src="@/assets/ai.svg" class="ai_svg animate__animated animate__fadeInUp" @click="dialogVisible = true">
+        <img src="@/assets/ai.svg" class="ai_svg animate__animated animate__fadeInUp" @click="dialogVisible = true"
+            v-if="isLogin()">
         <el-dialog v-model="dialogVisible" width="1100" align-center :before-close="handleClose">
             <div slot="title" class="custom_title">
                 <img src="@/assets/ai.svg" style="width: 30px;">
@@ -99,6 +100,11 @@ async function getLatest() {
     } catch (error) {
         console.error(error);
     }
+}
+
+// 是否显示Ai小助手按钮
+function isLogin() {
+    return localStorage.getItem("token") != null;
 }
 
 // 是否显示Ai小助手聊天框
