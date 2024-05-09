@@ -16,3 +16,12 @@ export function updateUser(data: {}) {
         data
     })
 }
+
+// 更改密码
+export function updatePassword(data: {}) {
+    return request({
+        url: '/user/updatePassword',
+        method: 'put',
+        data
+    })
+}

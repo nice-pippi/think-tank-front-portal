@@ -141,7 +141,7 @@
                 <div class="comment_content">{{ item.content }}</div>
                 <!-- 回复评论 -->
                 <div class="send_comment" v-if="drawer.replyCommentId == item.id">
-                    <el-input :rows="3" type="textarea" v-model="drawerContent" :placeholder="drawer.replyUserName"
+                    <el-input :rows="3" type="textarea" v-model="drawerContentBySon" :placeholder="drawer.replyUserName"
                         class="reply_comment" />
                     <el-button type="success" @click="subCommentReply">评论</el-button>
                 </div>
@@ -442,6 +442,7 @@ function closeDrawer() {
 
 // 绑定评论区抽屉文本框内容
 const drawerContent = ref('')
+const drawerContentBySon = ref('')
 
 // 回复评论
 function commentReply() {
@@ -476,7 +477,7 @@ function subCommentReply() {
     const blockId = String(route.params.blockId)
     const postId = route.params.postId
     const parentId = drawer.replyCommentId
-    const form = { blockId: blockId, postId: postId, parentId: parentId, content: drawerContent.value }
+    const form = { blockId: blockId, postId: postId, parentId: parentId, content: drawerContentBySon.value }
 
     replyComment(form).then(response => {
         ElMessage.success('发布成功')

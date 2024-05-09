@@ -11,13 +11,12 @@
                 <el-input v-model="form.email" placeholder="请输入邮箱" />
             </el-form-item>
             <el-form-item label="验证码">
-                <el-input v-model="form.code" placeholder="请输入验证码" style="width: 120px;" />
-                <el-button type="primary" style="margin-left: 18px;">发送验证码</el-button>
+                <el-input v-model="form.validateCode" placeholder="请输入验证码" style="width: 120px;" />
+                <el-button type="primary" style="margin-left: 18px;" @click="sendCode">发送验证码</el-button>
             </el-form-item>
             <el-form-item label="新密码">
                 <el-input v-model="form.password" placeholder="请输入新密码" />
             </el-form-item>
-
             <el-button type="success" class="update_button" @click="onSubmit">修改密码</el-button>
         </el-form>
 
@@ -25,17 +24,34 @@
 </template>
 
 <script lang="ts" setup>
-import router from '@/router';
+import { updatePassword } from '@/api/user';
+import { sendValidate } from '@/api/validateCode';
+import { ElMessage } from 'element-plus';
 import { reactive } from 'vue'
+
+// 修改密码表单
 const form = reactive({
     email: '',
-    code: '',
+    validateCode: '',
     password: ''
 })
 
-function onSubmit() {
+// 发送验证码
+function sendCode() {
+    sendValidate({ email: form.email }).then(response => {
+        ElMessage.success(response.data)
+    }).catch(error => {
+        ElMessage.error(error)
+    })
+}
 
-    router.replace('/')
+// 提交修改密码
+function onSubmit() {
+    updatePassword(form).then(response => {
+        ElMessage.success(response.data)
+    }).catch(error => {
+        ElMessage.error(error)
+    })
 }
 </script>
 
